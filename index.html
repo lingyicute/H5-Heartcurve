@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python 心脏线绘制演示</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom Scrollbar for code block */
+        .code-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .code-container::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        .code-container::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        .code-container::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        
+        /* Syntax highlighting simulation */
+        .token-keyword { color: #c678dd; }
+        .token-function { color: #61afef; }
+        .token-string { color: #98c379; }
+        .token-number { color: #d19a66; }
+        .token-operator { color: #56b6c2; }
+        .token-comment { color: #7f848e; font-style: italic; }
+        .token-variable { color: #e06c75; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Editable code inputs */
+        .code-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #4b5563;
+            border-radius: 4px;
+            color: #d19a66; /* token-number color */
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9em; /* Slightly smaller to fit line height */
+            width: 4ch; /* Wider default */
+            text-align: center;
+            padding: 2px 4px;
+            margin: 0 2px;
+            vertical-align: middle; /* Better alignment with text */
+            transition: all 0.2s;
+            -moz-appearance: textfield; /* Firefox remove spinner */
+        }
+        /* Chrome, Safari, Edge, Opera remove spinner */
+        .code-input::-webkit-outer-spin-button,
+        .code-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .code-input:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #64748b;
+        }
+        .code-input:focus {
+            outline: none;
+            border-color: #61afef;
+            background: #2c313a;
+            box-shadow: 0 0 0 2px rgba(97, 175, 239, 0.2);
+            color: #fff;
+        }
+        /* Adjust width for longer numbers if needed */
+        .code-input.w-wide { width: 5ch; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="w-full py-6 px-8 flex justify-center items-center border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-10">
+        <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Python 绘制心脏线演示</h1>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 w-full max-w-7xl mx-auto p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-80px)]">
+        
+        <!-- Left Panel: Code Editor -->
+        <div class="flex flex-col h-full rounded-2xl overflow-hidden shadow-2xl ring-1 ring-slate-900/5 bg-[#282c34]">
+            <!-- Editor Header -->
+            <div class="bg-[#21252b] px-4 py-3 flex items-center justify-between border-b border-white/5">
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div class="text-xs text-slate-400 font-mono">heart_curve.py</div>
+                <div class="w-12"></div> <!-- Spacer for alignment -->
+            </div>
+            
+            <!-- Code Area -->
+            <div class="relative flex-1 overflow-hidden group">
+                <pre class="code-container w-full h-full p-6 overflow-auto text-sm leading-relaxed code-font text-slate-300 selection:bg-blue-500/30"><code><span class="token-keyword">import</span> numpy <span class="token-keyword">as</span> np
+<span class="token-keyword">import</span> matplotlib.pyplot <span class="token-keyword">as</span> plt
+
+<span class="token-comment"># 1. 设置参数 t 的范围 (0 到 2π)</span>
+<span class="token-variable">t</span> <span class="token-operator">=</span> np.<span class="token-function">linspace</span>(<span class="token-number">0</span>, <span class="token-number">2</span> * np.pi, <span class="token-number">1000</span>)
+
+<span class="token-comment"># 2. 定义心脏线方程 (修改数字可调整形状)</span>
+<span class="token-variable">x</span> <span class="token-operator">=</span> <input type="number" id="val_x1" value="16" class="code-input"> * np.<span class="token-function">sin</span>(<span class="token-variable">t</span>)**<span class="token-number">3</span>
+<span class="token-variable">y</span> <span class="token-operator">=</span> <input type="number" id="val_y1" value="13" class="code-input"> * np.<span class="token-function">cos</span>(<span class="token-variable">t</span>) <span class="token-operator">-</span> <input type="number" id="val_y2" value="5" class="code-input"> * np.<span class="token-function">cos</span>(<span class="token-number">2</span>*<span class="token-variable">t</span>) <span class="token-operator">-</span> <input type="number" id="val_y3" value="2" class="code-input"> * np.<span class="token-function">cos</span>(<span class="token-number">3</span>*<span class="token-variable">t</span>) <span class="token-operator">-</span> <input type="number" id="val_y4" value="1" class="code-input"> * np.<span class="token-function">cos</span>(<span class="token-number">4</span>*<span class="token-variable">t</span>)
+
+<span class="token-comment"># 3. 创建画布并绘图</span>
+plt.<span class="token-function">figure</span>(figsize=(<span class="token-number">8</span>, <span class="token-number">6</span>))
+plt.<span class="token-function">plot</span>(<span class="token-variable">x</span>, <span class="token-variable">y</span>, color=<span class="token-string">'#ef4444'</span>, linewidth=<span class="token-number">2</span>)
+
+<span class="token-comment"># 4. 设置样式与标题</span>
+plt.<span class="token-function">title</span>(<span class="token-string">'Heart Curve'</span>)
+plt.<span class="token-function">axis</span>(<span class="token-string">'equal'</span>)  <span class="token-comment"># 保持比例一致</span>
+plt.<span class="token-function">axis</span>(<span class="token-string">'off'</span>)    <span class="token-comment"># 隐藏坐标轴</span>
+
+<span class="token-comment"># 5. 显示结果</span>
+plt.<span class="token-function">show</span>()</code></pre>
+                
+                <!-- Run Button Overlay -->
+                <div class="absolute bottom-6 right-6">
+                    <button id="runBtn" class="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-6 py-2.5 rounded-full font-semibold shadow-lg shadow-green-900/20 transition-all active:scale-95 cursor-pointer group-hover:translate-y-0 translate-y-0 lg:translate-y-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                        </svg>
+                        Run Code
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Visualization Area -->
+        <div class="flex flex-col h-full bg-white rounded-2xl shadow-xl ring-1 ring-slate-900/5 relative overflow-hidden">
+            <!-- Visualization Header -->
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white z-10">
+                <h2 class="font-semibold text-slate-700 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-blue-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605" />
+                    </svg>
+                    Output
+                </h2>
+                <div class="text-xs text-slate-400 font-mono" id="status">Ready</div>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="flex-1 relative flex items-center justify-center bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+                <canvas id="heartCanvas" class="z-10"></canvas>
+                
+                <!-- Placeholder Text -->
+                <div id="placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 transition-opacity duration-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-24 h-24 mb-4 opacity-50">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                    </svg>
+                    <p>Click "Run Code" to render</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+        const runBtn = document.getElementById('runBtn');
+        const placeholder = document.getElementById('placeholder');
+        const statusEl = document.getElementById('status');
+
+        let animationId;
+        let points = [];
+        let drawing = false;
+
+        // Resize canvas to handle HDPI screens properly
+        function resizeCanvas() {
+            const parent = canvas.parentElement;
+            const dpr = window.devicePixelRatio || 1;
+            const rect = parent.getBoundingClientRect();
+
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            
+            // CSS size
+            canvas.style.width = `${rect.width}px`;
+            canvas.style.height = `${rect.height}px`;
+            
+            ctx.scale(dpr, dpr);
+            
+            // If we have drawn points, redraw them (if resize happens during viewing)
+            if (points.length > 0 && !drawing) {
+                drawStaticHeart();
+            }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        // Initial resize
+        resizeCanvas();
+
+        function calculateHeartPoints() {
+            const pts = [];
+            // More points for smoother curve
+            const steps = 300; 
+            
+            // Get values from inputs
+            const x1 = parseFloat(document.getElementById('val_x1').value) || 16;
+            const y1 = parseFloat(document.getElementById('val_y1').value) || 13;
+            const y2 = parseFloat(document.getElementById('val_y2').value) || 5;
+            const y3 = parseFloat(document.getElementById('val_y3').value) || 2;
+            const y4 = parseFloat(document.getElementById('val_y4').value) || 1;
+
+            for (let i = 0; i <= steps; i++) {
+                const t = (i / steps) * 2 * Math.PI;
+                
+                // The heart formula
+                // x = 16sin^3(t)
+                // y = 13cos(t) - 5cos(2t) - 2cos(3t) - cos(4t)
+                const x = x1 * Math.pow(Math.sin(t), 3);
+                const y = y1 * Math.cos(t) - y2 * Math.cos(2*t) - y3 * Math.cos(3*t) - y4 * Math.cos(4*t);
+                
+                pts.push({x, y});
+            }
+            return pts;
+        }
+
+        function mapPointToCanvas(pt, width, height) {
+            // Scale factor: determine based on canvas size
+            // Heart coordinates roughly range from -16 to 16 in X, and -17 to 12 in Y
+            // Total width ~32, Total height ~30
+            const scale = Math.min(width, height) / 40; 
+            
+            // Center the heart
+            const centerX = width / 2;
+            const centerY = height / 2 - (scale * 2); // Slight offset upwards visually
+
+            return {
+                x: centerX + pt.x * scale,
+                y: centerY - pt.y * scale // Flip Y axis for canvas
+            };
+        }
+
+        function drawStaticHeart() {
+            const parent = canvas.parentElement;
+            const width = parent.clientWidth;
+            const height = parent.clientHeight;
+            
+            ctx.clearRect(0, 0, width, height);
+            ctx.beginPath();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#ef4444'; // Tailwind red-500
+            
+            // Draw grid lines (optional aesthetic)
+            
+            if (points.length === 0) points = calculateHeartPoints();
+            
+            const firstPt = mapPointToCanvas(points[0], width, height);
+            ctx.moveTo(firstPt.x, firstPt.y);
+            
+            for (let i = 1; i < points.length; i++) {
+                const pt = mapPointToCanvas(points[i], width, height);
+                ctx.lineTo(pt.x, pt.y);
+            }
+            
+            ctx.stroke();
+            
+            // Fill gradient
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+            ctx.fill();
+        }
+
+        function animateHeart() {
+            if (drawing) return;
+            drawing = true;
+            statusEl.innerText = "Running...";
+            statusEl.className = "text-xs text-yellow-600 font-mono animate-pulse";
+            
+            // Reset
+            placeholder.style.opacity = '0';
+            const parent = canvas.parentElement;
+            const width = parent.clientWidth;
+            const height = parent.clientHeight;
+            ctx.clearRect(0, 0, width, height);
+            
+            points = calculateHeartPoints();
+            let currentStep = 0;
+            
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#ef4444';
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            function step() {
+                if (currentStep >= points.length - 1) {
+                    // Finish animation
+                    ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+                    ctx.fill();
+                    drawing = false;
+                    statusEl.innerText = "Completed (0.4s)";
+                    statusEl.className = "text-xs text-green-600 font-mono";
+                    return;
+                }
+                
+                // Draw multiple segments per frame for speed
+                const speed = 5; 
+                ctx.beginPath();
+                
+                // Start where we left off
+                const startRaw = points[currentStep];
+                const startPt = mapPointToCanvas(startRaw, width, height);
+                ctx.moveTo(startPt.x, startPt.y);
+                
+                for (let i = 0; i < speed; i++) {
+                    if (currentStep >= points.length - 1) break;
+                    currentStep++;
+                    const ptRaw = points[currentStep];
+                    const pt = mapPointToCanvas(ptRaw, width, height);
+                    ctx.lineTo(pt.x, pt.y);
+                }
+                
+                ctx.stroke();
+                animationId = requestAnimationFrame(step);
+            }
+            
+            step();
+        }
+
+        runBtn.addEventListener('click', () => {
+            // Cancel any existing animation if button mashed
+            if (animationId) cancelAnimationFrame(animationId);
+            resizeCanvas(); // Ensure size is correct
+            animateHeart();
+        });
+
+    </script>
+</body>
+</html>
