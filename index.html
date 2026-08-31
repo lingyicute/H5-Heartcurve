@@ -86,7 +86,7 @@
 
     <!-- Header -->
     <header class="w-full py-6 px-8 flex justify-center items-center border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-10">
-        <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Python 绘制心脏线演示</h1>
+        <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Python 绘制心形线演示</h1>
     </header>
 
     <!-- Main Content -->
@@ -113,7 +113,7 @@
 <span class="token-comment"># 1. 设置参数 t 的范围 (0 到 2π)</span>
 <span class="token-variable">t</span> <span class="token-operator">=</span> np.<span class="token-function">linspace</span>(<span class="token-number">0</span>, <span class="token-number">2</span> * np.pi, <span class="token-number">1000</span>)
 
-<span class="token-comment"># 2. 定义心脏线方程 (修改数字可调整形状)</span>
+<span class="token-comment"># 2. 定义心形线方程 (修改数字可调整形状)</span>
 <span class="token-variable">x</span> <span class="token-operator">=</span> <input type="number" id="val_x1" value="16" class="code-input"> * np.<span class="token-function">sin</span>(<span class="token-variable">t</span>)**<span class="token-number">3</span>
 <span class="token-variable">y</span> <span class="token-operator">=</span> <input type="number" id="val_y1" value="13" class="code-input"> * np.<span class="token-function">cos</span>(<span class="token-variable">t</span>) <span class="token-operator">-</span> <input type="number" id="val_y2" value="5" class="code-input"> * np.<span class="token-function">cos</span>(<span class="token-number">2</span>*<span class="token-variable">t</span>) <span class="token-operator">-</span> <input type="number" id="val_y3" value="2" class="code-input"> * np.<span class="token-function">cos</span>(<span class="token-number">3</span>*<span class="token-variable">t</span>) <span class="token-operator">-</span> <input type="number" id="val_y4" value="1" class="code-input"> * np.<span class="token-function">cos</span>(<span class="token-number">4</span>*<span class="token-variable">t</span>)
 
