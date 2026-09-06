@@ -2,7 +2,7 @@
 
 ![image](./ss.png)
 
-## Take a quick look？
+## Take a quick look?
 
 [GitHub Page](https://lingyicute.github.io/H5-Heartcurve)
 
@@ -10,7 +10,7 @@
 
 H5-Heartcurve is released under the GNU General Public License v3.0 (GPLv3).
 
-Copyright (C) 2024-2026 lingyicute.
+Copyright (C) 2025-2026 lingyicute.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
